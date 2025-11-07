@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>供应链金融管理平台</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">供应链金融管理平台</h1>
+                <nav class="nav">
+                    {% if request.cookies.get('username') %}
+                        <span class="username">欢迎, {{ request.cookies.get('username') }}</span>
+                        <a href="/dashboard" class="nav-link">仪表板</a>
+                        <a href="/logout" class="nav-link">登出</a>
+                    {% else %}
+                        <a href="/login" class="nav-link">登录</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </header>
+    
+    <main class="main">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 供应链金融管理平台</p>
+        </div>
+    </footer>
+</body>
+</html>

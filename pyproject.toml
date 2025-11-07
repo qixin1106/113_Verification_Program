@@ -1,7 +1,31 @@
 [project]
-name = "trae-113-demo"
-version = "0.1.0"
-description = "Add your description here"
+name = "SupplyChainFinance"
+version = "1.0.0"
+description = "供应链金融管理平台 - 解决供应链周期中回款慢的问题"
 readme = "README.md"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = [
+    "fastapi==0.104.1",
+    "tortoise-orm[asyncpg]==0.20.0",
+    "sqlalchemy",
+    "jinja2==3.1.2",
+    "python-jose[cryptography]==3.3.0",
+    "passlib[bcrypt]==1.7.4",
+    "aiosqlite==0.19.0",
+    "aerich==0.7.2",
+    "uvicorn==0.24.0",
+    "python-multipart==0.0.6",
+    "python-dotenv==1.0.0",
+    "apscheduler==3.10.4"
+]
+
+[tool.uv]
+python = "3.10"
+
+[tool.uv.scripts]
+start = "uvicorn main:app --reload"
+init-db = "python -c 'from main import init_db; import asyncio; asyncio.run(init_db())'"
+
+[tool.aerich]
+migrations_folder = "migrations"
+tortoise_orm = "main.TORTOISE_ORM"

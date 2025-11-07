@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>仪表板</h2>
+    
+    <div class="role-info">
+        <h3>角色: {{ request.cookies.get('role') }}</h3>
+    </div>
+    
+    {% if request.cookies.get('role') == 'admin' %}
+        <!-- 管理员仪表板 -->
+        <div class="dashboard-section">
+            <h3>系统统计</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">总用户数</div>
+                    <div class="stat-value">{{ stats.total_users }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">供应商数</div>
+                    <div class="stat-value">{{ stats.total_suppliers }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">购买方数</div>
+                    <div class="stat-value">{{ stats.total_buyers }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">贷款方数</div>
+                    <div class="stat-value">{{ stats.total_lenders }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">总订单数</div>
+                    <div class="stat-value">{{ stats.total_orders }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">总发票数</div>
+                    <div class="stat-value">{{ stats.total_invoices }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">总贷款数</div>
+                    <div class="stat-value">{{ stats.total_loans }}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">待处理贷款申请</div>
+                    <div class="stat-value">{{ stats.total_pending_loan_applications }}</div>
+                </div>
+            </div>
+        </div>
+    
+    {% elif request.cookies.get('role') == 'supplier' %}
+        <!-- 供应商仪表板 -->
+        <div class="dashboard-section">
+            <h3>我的订单</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>订单ID</th>
+                        <th>购买方</th>
+                        <th>金额</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}    
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.buyer_id }}</td>
+                            <td>{{ order.amount }}</td>
+                            <td>{{ order.status }}</td>
+                            <td>{{ order.created_at }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="dashboard-section">
+            <h3>我的发票</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>发票ID</th>
+                        <th>订单ID</th>
+                        <th>金额</th>
+                        <th>到期日期</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}    
+                        <tr>
+                            <td>{{ invoice.id }}</td>
+                            <td>{{ invoice.order_id }}</td>
+                            <td>{{ invoice.amount }}</td>
+                            <td>{{ invoice.due_date }}</td>
+                            <td>{{ invoice.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    
+    {% elif request.cookies.get('role') == 'buyer' %}
+        <!-- 购买方仪表板 -->
+        <div class="dashboard-section">
+            <h3>我的订单</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>订单ID</th>
+                        <th>供应商</th>
+                        <th>金额</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}    
+                        <tr>
+                            <td>{{ order.id }}</td>
+                            <td>{{ order.supplier_id }}</td>
+                            <td>{{ order.amount }}</td>
+                            <td>{{ order.status }}</td>
+                            <td>{{ order.created_at }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="dashboard-section">
+            <h3>我的发票</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>发票ID</th>
+                        <th>订单ID</th>
+                        <th>金额</th>
+                        <th>到期日期</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for invoice in invoices %}    
+                        <tr>
+                            <td>{{ invoice.id }}</td>
+                            <td>{{ invoice.order_id }}</td>
+                            <td>{{ invoice.amount }}</td>
+                            <td>{{ invoice.due_date }}</td>
+                            <td>{{ invoice.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    
+    {% elif request.cookies.get('role') == 'lender' %}
+        <!-- 贷款方仪表板 -->
+        <div class="dashboard-section">
+            <h3>待审核贷款申请</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>申请ID</th>
+                        <th>申请人</th>
+                        <th>发票ID</th>
+                        <th>申请金额</th>
+                        <th>风险评分</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for application in loan_applications %}    
+                        <tr>
+                            <td>{{ application.id }}</td>
+                            <td>{{ application.applicant_id }}</td>
+                            <td>{{ application.invoice_id }}</td>
+                            <td>{{ application.amount_requested }}</td>
+                            <td>{{ application.risk_score }}</td>
+                            <td>{{ application.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="dashboard-section">
+            <h3>我的贷款</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>贷款ID</th>
+                        <th>申请人</th>
+                        <th>金额</th>
+                        <th>利率</th>
+                        <th>还款日期</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for loan in loans %}    
+                        <tr>
+                            <td>{{ loan.id }}</td>
+                            <td>{{ loan.application_id }}</td>
+                            <td>{{ loan.amount }}</td>
+                            <td>{{ loan.interest_rate }}</td>
+                            <td>{{ loan.repayment_date }}</td>
+                            <td>{{ loan.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}
